@@ -6,25 +6,23 @@ import RealmSwift
 class HistoryViewModel {
     
     var savedCharacters = Variable<[People]>([])
+   
     
     func getSavedCharacters() {
-        let realm = try! Realm()
-        let savedChars = realm.objects(People.self).toArray(ofType: People.self) as [People]
+         let realm = try! Realm()
+        let savedChars = realm.objects(People.self).toArray()
         print("всего сохранено: \(savedChars.count)")
-        self.savedCharacters.value = savedChars
+        savedCharacters.value = savedChars
     }
     
-}
-
-extension Results {
-    func toArray<T>(ofType: T.Type) -> [T] {
-        var array = [T]()
-        for i in 0 ..< count {
-            if let result = self[i] as? T {
-                array.append(result)
-            }
+    func clearHistory() {
+         let realm = try! Realm()
+        try! realm.write {
+            realm.deleteAll()
         }
+            print("История очищена.")
+        savedCharacters.value = []
         
-        return array
     }
+    
 }

@@ -5,34 +5,25 @@ import RealmSwift
 
 class MainVCViewModel {
     
-    let requestService = RequestService()
     
-    var characters = Variable<[People]>([])
-    var charToDisplay =  Variable<People?>(nil)
+    var charToDisplay =  Variable<[People]>([])
+    var hideInfoView = Variable<Bool>(true)
+    var char = BehaviorSubject<People?>(value: nil)
     
-    
-    func serchForPeople(search: String) {
-        requestService.searchCharacters(search: search, completion: { recievedChars in
-            self.characters.value = recievedChars
-            print(self.characters.value.count)
-        })
-    }
-    
-    func sharToDisplaySetup() {
-         if characters.value.count == 1 {
-            charToDisplay.value = characters.value.first
-        }
-        
-    }
-    
-    func saveObjectToHistory(_ personToSave: People) {
-        
+    func getLastChar() {
         let realm = try! Realm()
-        
-        try! realm.write {
-            realm.add(personToSave)
+        if let lastSavedChar = realm.objects(People.self).last {
+            charToDisplay.value.removeAll()
+            charToDisplay.value.append(lastSavedChar)
+            print("last saved char : \(lastSavedChar)")
         }
-        print("\(personToSave.name) saved!")
+    }
+        func getLast() {
+            let realm = try! Realm()
+            if let lastSavedChar = realm.objects(People.self).last {
+                print("Последний сохраненный: \(lastSavedChar.name)")
+                char.onNext(lastSavedChar)
+            }
     }
     
 }

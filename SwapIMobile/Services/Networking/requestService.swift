@@ -2,7 +2,12 @@
 import Foundation
 import Alamofire
 
-class RequestService {
+final class RequestService {
+    
+    static let shared = RequestService()
+    
+    
+   private init(){}
     
     let baseUrl: String = "https://swapi.co/api/"
     let peopleSearchPath: String = "people/"
