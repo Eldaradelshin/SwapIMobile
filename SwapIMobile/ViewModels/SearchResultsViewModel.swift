@@ -10,8 +10,8 @@ class SearchResultsViewModel {
     var charToDisplay =  Variable<People?>(nil)
     
     func serchForPeople(search: String) {
-        RequestService.shared.searchCharacters(search: search, completion: { recievedChars in
-            self.characters.value = recievedChars
+        RequestService.shared.searchCharacters(search: search, completion: { [weak self] recievedChars in
+            self?.characters.value = recievedChars
             // print(self.characters.value.count)
         })
     }
